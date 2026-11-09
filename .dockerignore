@@ -1,0 +1,15 @@
+.env
+.env.*
+!.env.example
+.git/
+runtime/*
+!runtime/.htaccess
+!runtime/index.html
+*.log
+*.cache
+vendor/
+node_modules/
+dist/
+.venv/
+__pycache__/
+*.py[cod]

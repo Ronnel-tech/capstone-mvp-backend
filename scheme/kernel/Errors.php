@@ -137,6 +137,22 @@ class Errors
 	public function show_database_error($message, $sql = '', $bindings = [], $exception = null, $template = 'error_db')
 	{
 		$is_cli = PHP_SAPI === 'cli' || PHP_SAPI === 'phpdbg';
+		$request_path = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
+		$is_api_request = is_string($request_path) && preg_match('#(?:^|/)api(?:/|$)#i', $request_path);
+
+		if ($is_api_request) {
+			$is_conflict = $exception instanceof PDOException
+				&& (($exception->errorInfo[1] ?? null) === 1062 || (string) $exception->getCode() === '23000');
+			http_response_code($is_conflict ? 409 : 500);
+			header('Content-Type: application/json; charset=utf-8');
+			header('Cache-Control: no-store, max-age=0');
+			error_log('Database error while handling an API request.');
+			$message = $is_conflict
+				? 'A record with these details already exists.'
+				: 'The request could not be completed.';
+			echo json_encode(['success' => false, 'error' => $message]);
+			exit;
+		}
 
 		if (!$is_cli && !headers_sent()) {
 			http_response_code(500);

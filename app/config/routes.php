@@ -45,3 +45,37 @@ defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
 /** @var object $router **/
 
 $router->get('/', 'Welcome::index');
+$router->get('api/health', 'ApiController::health');
+$router->get('cli/provision-admin', 'ProvisionAdmin::create');
+$router->post('api/auth/register', 'ApiController::register');
+$router->post('api/auth/login', 'ApiController::login');
+$router->post('api/auth/refresh', 'ApiController::refresh');
+$router->post('api/auth/logout', 'ApiController::logout');
+$router->get('api/auth/me', 'ApiController::me');
+$router->get('api/departments', 'ApiController::departments');
+$router->get('api/admin/departments', 'ApiController::admin_departments');
+$router->post('api/admin/departments', 'ApiController::create_department');
+$router->patch('api/admin/departments/{id}', 'ApiController::update_department');
+$router->patch('api/admin/departments/{id}/status', 'ApiController::department_status');
+$router->get('api/admin/registrations', 'ApiController::pending_registrations');
+$router->patch('api/admin/registrations/{id}/approve', 'ApiController::approve_registration');
+$router->patch('api/admin/registrations/{id}/reject', 'ApiController::reject_registration');
+$router->get('api/admin/employees', 'ApiController::employees');
+$router->patch('api/admin/employees/{id}/status', 'ApiController::employee_status');
+$router->get('api/employee/attendance', 'ApiController::employee_attendance');
+$router->get('api/employee/attendance/today', 'ApiController::today_attendance');
+$router->post('api/attendance/time-in', 'ApiController::time_in');
+$router->post('api/attendance/time-out', 'ApiController::time_out');
+$router->get('api/admin/dashboard', 'ApiController::admin_dashboard');
+$router->get('api/admin/analytics', 'ApiController::admin_analytics');
+$router->get('api/admin/attendance', 'ApiController::admin_attendance');
+$router->get('api/admin/reports/attendance', 'ApiController::attendance_report');
+$router->get('api/admin/reports/attendance/export', 'ApiController::export_attendance_report');
+
+// Migration Routes
+$router->get('create-migration/{migration_class}', 'MigrationController::create_migration');
+$router->get('migrate', 'MigrationController::migrate');
+$router->get('rollback', 'MigrationController::rollback');
+$router->get('rollback-all', 'MigrationController::rollback_all');
+$router->get('refresh', 'MigrationController::refresh');
+$router->get('status', 'MigrationController::status');
